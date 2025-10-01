@@ -1,0 +1,183 @@
+# =============================================================================# =============================================================================
+
+# CIFAR-10 CNN Project - Git Ignore File  # CIFAR-10 CNN Project - Git Ignore File
+
+# Excludes large files, datasets, and temporary files from version control# Excludes large files, datasets, and temporary files from version control
+
+# =============================================================================# =============================================================================
+
+
+
+# Large Model Files (PyTorch)# Large Model Files (PyTorch)
+
+*.pth*.pth
+
+*.pt*.pt
+
+*.pkl*.pkl
+
+*.pickle*.pickle
+
+
+
+# Large Model Files (TensorFlow)  # Large Model Files (TensorFlow)
+
+*.h5*.h5
+
+*.hdf5*.hdf5
+
+*.pb*.pb
+
+saved_model/saved_model/
+
+checkpoints/checkpoints/
+
+
+
+# Dataset Files (Large)# Dataset Files (Large)
+
+cifar10_data/cifar10_data/
+
+data/data/
+
+cifar-10-batches-py/cifar-10-batches-py/
+
+cifar-10-python.tar.gzcifar-10-python.tar.gz
+
+*.tar.gz*.tar.gz
+
+*.zip*.zip
+
+
+
+# Python Cache and Bytecode# Python Cache and Bytecode
+
+__pycache__/__pycache__/
+
+*.py[cod]*.py[cod]
+
+*$py.class*$py.class
+
+*.so
+
+# Virtual Environments (CRITICAL - These contain huge files).Python
+
+venv/build/
+
+env/develop-eggs/
+
+ENV/dist/
+
+.venv/downloads/
+
+**/venv/eggs/
+
+**/env/.eggs/
+
+**/.venv/lib/
+
+lib64/
+
+# IDE and Editor Filesparts/
+
+.vscode/sdist/
+
+.idea/var/
+
+.DS_Storewheels/
+
+share/python-wheels/
+
+# Jupyter Notebook Checkpoints*.egg-info/
+
+.ipynb_checkpoints/.installed.cfg
+
+*.egg
+
+# Upload Directory  MANIFEST
+
+static/uploads/*
+
+!static/uploads/.gitkeep# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Virtual Environments (CRITICAL - These contain huge files)
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+**/venv/
+**/env/
+**/.venv/
+tensorflow_app/venv/
+cloud_deployment/venv/
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# MacOS Files
+.AppleDouble
+.LSOverride
+Icon
+
+# Windows Files
+*.lnk
+
+# Log Files
+*.log
+logs/
+*.out
+
+# Temporary Files
+tmp/
+temp/
+.tmp/
+.cache/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node.js (if using any JS tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Tensorboard Logs
+runs/
+tensorboard_logs/
+
+# Large Output Files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+plots/
+visualizations/
+
+# Ignore uploaded files in Flask app
+cloud_deployment/static/uploads/*
+!cloud_deployment/static/uploads/.gitkeep
+
+# Keep small sample files for testing
+!sample_images/
+!test_images/
