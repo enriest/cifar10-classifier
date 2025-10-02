@@ -72,6 +72,10 @@ MANIFEST
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
+# Development Notebooks (keep in main branch only)
+Project.ipynb
+Transfer learning.ipynb
+
 # IDE and Editor Files
 .vscode/
 .idea/
