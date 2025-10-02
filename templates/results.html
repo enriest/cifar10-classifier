@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classification Results - CIFAR-10</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .prediction-card {
+            transition: transform 0.2s;
+        }
+        .prediction-card:hover {
+            transform: translateY(-2px);
+        }
+        .progress {
+            height: 25px;
+        }
+        .uploaded-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h1 class="card-title mb-0">🎯 Classification Results</h1>
+                        <p class="mb-0">Image: {{ filename }}</p>
+                        <p class="mb-0">
+                            {% if selected_model == 'custom_cnn' %}
+                                Model: Custom CNN (PyTorch)
+                            {% elif selected_model == 'mobilenet' %}
+                                Model: MobileNetV2 (TensorFlow)
+                            {% else %}
+                                Model Comparison: Both Models
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Uploaded Image -->
+                            <div class="col-md-6">
+                                <h5>📷 Uploaded Image</h5>
+                                <div class="text-center">
+                                    <img src="data:image/jpeg;base64,{{ image_data }}" 
+                                         alt="Uploaded Image" 
+                                         class="uploaded-image">
+                                </div>
+                            </div>
+                            
+                            <!-- Predictions -->
+                            <div class="col-md-6">
+                                {% if selected_model == 'both' %}
+                                    <!-- Show both model results -->
+                                    {% if results.custom_cnn %}
+                                        <h5>🔍 Custom CNN Predictions</h5>
+                                        {% for prediction in results.custom_cnn %}
+                                            <div class="card prediction-card mb-2 {% if loop.index == 1 %}border-primary{% endif %}">
+                                                <div class="card-body py-2">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <h6 class="card-title mb-0 small">
+                                                            {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}.{% endif %}
+                                                            {{ prediction.class.title() }}
+                                                        </h6>
+                                                        <span class="badge {% if loop.index == 1 %}bg-primary{% else %}bg-secondary{% endif %} small">
+                                                            {{ "%.2f"|format(prediction.probability) }}%
+                                                        </span>
+                                                    </div>
+                                                    <div class="progress" style="height: 15px;">
+                                                        <div class="progress-bar {% if loop.index == 1 %}bg-primary{% else %}bg-secondary{% endif %}" 
+                                                             role="progressbar" 
+                                                             style="width: {{ prediction.probability }}%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if results.mobilenet %}
+                                        <h5 class="mt-3">🔍 MobileNetV2 Predictions</h5>
+                                        {% for prediction in results.mobilenet %}
+                                            <div class="card prediction-card mb-2 {% if loop.index == 1 %}border-success{% endif %}">
+                                                <div class="card-body py-2">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <h6 class="card-title mb-0 small">
+                                                            {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}.{% endif %}
+                                                            {{ prediction.class.title() }}
+                                                        </h6>
+                                                        <span class="badge {% if loop.index == 1 %}bg-success{% else %}bg-secondary{% endif %} small">
+                                                            {{ "%.2f"|format(prediction.probability) }}%
+                                                        </span>
+                                                    </div>
+                                                    <div class="progress" style="height: 15px;">
+                                                        <div class="progress-bar {% if loop.index == 1 %}bg-success{% else %}bg-secondary{% endif %}" 
+                                                             role="progressbar" 
+                                                             style="width: {{ prediction.probability }}%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% else %}
+                                    <!-- Show single model results -->
+                                    <h5>🔍 Top Predictions</h5>
+                                    {% set predictions = results.custom_cnn if selected_model == 'custom_cnn' else results.mobilenet %}
+                                    {% for prediction in predictions %}
+                                        <div class="card prediction-card mb-3 {% if loop.index == 1 %}border-success{% endif %}">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h6 class="card-title mb-0">
+                                                        {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}.{% endif %}
+                                                        {{ prediction.class.title() }}
+                                                    </h6>
+                                                    <span class="badge {% if loop.index == 1 %}bg-success{% else %}bg-primary{% endif %}">
+                                                        {{ "%.2f"|format(prediction.probability) }}%
+                                                    </span>
+                                                </div>
+                                                <div class="progress">
+                                                    <div class="progress-bar {% if loop.index == 1 %}bg-success{% else %}bg-primary{% endif %}" 
+                                                         role="progressbar" 
+                                                         style="width: {{ prediction.probability }}%"
+                                                         aria-valuenow="{{ prediction.probability }}" 
+                                                         aria-valuemin="0" 
+                                                         aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Additional Information -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <h6>📊 Interpretation:</h6>
+                                    {% if selected_model == 'both' %}
+                                        {% if results.custom_cnn and results.mobilenet %}
+                                            {% set custom_top = results.custom_cnn[0] %}
+                                            {% set mobile_top = results.mobilenet[0] %}
+                                            <p class="mb-0">
+                                                <strong>Custom CNN:</strong> {{ "%.2f"|format(custom_top.probability) }}% confident it's a <strong>{{ custom_top.class }}</strong><br>
+                                                <strong>MobileNetV2:</strong> {{ "%.2f"|format(mobile_top.probability) }}% confident it's a <strong>{{ mobile_top.class }}</strong><br>
+                                                {% if custom_top.class == mobile_top.class %}
+                                                    ✅ Both models agree on the classification!
+                                                {% else %}
+                                                    ⚠️ Models disagree - this might indicate an ambiguous image.
+                                                {% endif %}
+                                            </p>
+                                        {% endif %}
+                                    {% else %}
+                                        {% set top_prediction = results.custom_cnn[0] if selected_model == 'custom_cnn' else results.mobilenet[0] %}
+                                        <p class="mb-0">
+                                            The model is <strong>{{ "%.2f"|format(top_prediction.probability) }}%</strong> confident that this image shows a <strong>{{ top_prediction.class }}</strong>.
+                                            {% if top_prediction.probability < 50 %}
+                                                The confidence is relatively low, which might indicate the image is ambiguous or doesn't clearly match any CIFAR-10 category.
+                                            {% elif top_prediction.probability < 80 %}
+                                                The model has moderate confidence in this prediction.
+                                            {% else %}
+                                                The model is very confident in this prediction!
+                                            {% endif %}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="text-center mt-4">
+                            <a href="/" class="btn btn-primary btn-lg">
+                                🔄 Classify Another Image
+                            </a>
+                            <button class="btn btn-outline-secondary btn-lg" onclick="shareResults()">
+                                📤 Share Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function shareResults() {
+            {% if selected_model == 'both' %}
+                {% if results.custom_cnn and results.mobilenet %}
+                    const customPred = "{{ results.custom_cnn[0].class }}";
+                    const customConf = "{{ '%.2f'|format(results.custom_cnn[0].probability) }}";
+                    const mobilePred = "{{ results.mobilenet[0].class }}";
+                    const mobileConf = "{{ '%.2f'|format(results.mobilenet[0].probability) }}";
+                    const text = `I compared two AI models! Custom CNN: ${customPred} (${customConf}%), MobileNetV2: ${mobilePred} (${mobileConf}%) 🤖`;
+                {% endif %}
+            {% else %}
+                {% set top_prediction = results.custom_cnn[0] if selected_model == 'custom_cnn' else results.mobilenet[0] %}
+                const prediction = "{{ top_prediction.class }}";
+                const confidence = "{{ '%.2f'|format(top_prediction.probability) }}";
+                const modelName = "{{ 'Custom CNN' if selected_model == 'custom_cnn' else 'MobileNetV2' }}";
+                const text = `I classified an image using ${modelName}! It thinks it's a ${prediction} with ${confidence}% confidence. 🤖`;
+            {% endif %}
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'CIFAR-10 Classification Results',
+                    text: text,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Results copied to clipboard!');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
