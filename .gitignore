@@ -10,14 +10,14 @@
 saved_model/
 checkpoints/
 
-# Large Model Files (PyTorch - exclude most, but allow our deployment model)
+# Large Model Files (PyTorch - exclude ALL for deployment)
 *.pt
+*.pth
 *.pkl
 *.pickle
 best_transfer_model_efficientnet_b0.pth
 model_stride.pth
-# Allow our main model file for deployment
-!best_model_cifar10.pth
+best_model_cifar10.pth
 
 # Dataset Files (Large)
 cifar10_data/
@@ -142,5 +142,7 @@ cloud_deployment/
 
 # Large model files in models directory
 models/*.h5
+models/*.pth
+models/
 
 # Keep only essential files for Railway deployment
