@@ -18,6 +18,8 @@ checkpoints/
 best_transfer_model_efficientnet_b0.pth
 model_stride.pth
 best_model_cifar10.pth
+best_model_cifar10\ 2.pth
+best_model_cifar10\ 3.pth
 
 # Dataset Files (Large)
 cifar10_data/
