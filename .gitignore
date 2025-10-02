@@ -1,106 +1,39 @@
-# =============================================================================# =============================================================================
+# =============================================================================
+# CIFAR-10 CNN Project - Git Ignore File
+# Lightweight deployment with PyTorch Custom CNN only
+# =============================================================================
 
-# CIFAR-10 CNN Project - Git Ignore File  # CIFAR-10 CNN Project - Git Ignore File
+# Large Model Files (TensorFlow - exclude all)
+*.h5
+*.hdf5
+*.pb
+saved_model/
+checkpoints/
+tensorflow_app/
+cifar10_tensorflow_model.h5
 
-# Excludes large files, datasets, and temporary files from version control# Excludes large files, datasets, and temporary files from version control
+# Large Model Files (PyTorch - exclude most, but allow our deployment model)
+*.pt
+*.pkl
+*.pickle
+best_transfer_model_efficientnet_b0.pth
+model_stride.pth
+# Allow our main model file for deployment
+!best_model_cifar10.pth
 
-# =============================================================================# =============================================================================
+# Dataset Files (Large)
+cifar10_data/
+data/
+cifar-10-batches-py/
+cifar-10-python.tar.gz
+*.tar.gz
+*.zip
 
-
-
-# Large Model Files (PyTorch)# Large Model Files (PyTorch)
-
-*.pth*.pth
-
-*.pt*.pt
-
-*.pkl*.pkl
-
-*.pickle*.pickle
-
-
-
-# Large Model Files (TensorFlow)  # Large Model Files (TensorFlow)
-
-*.h5*.h5
-
-*.hdf5*.hdf5
-
-*.pb*.pb
-
-saved_model/saved_model/
-
-checkpoints/checkpoints/
-
-
-
-# Dataset Files (Large)# Dataset Files (Large)
-
-cifar10_data/cifar10_data/
-
-data/data/
-
-cifar-10-batches-py/cifar-10-batches-py/
-
-cifar-10-python.tar.gzcifar-10-python.tar.gz
-
-*.tar.gz*.tar.gz
-
-*.zip*.zip
-
-
-
-# Python Cache and Bytecode# Python Cache and Bytecode
-
-__pycache__/__pycache__/
-
-*.py[cod]*.py[cod]
-
-*$py.class*$py.class
-
+# Python Cache and Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
 *.so
-
-# Virtual Environments (CRITICAL - These contain huge files).Python
-
-venv/build/
-
-env/develop-eggs/
-
-ENV/dist/
-
-.venv/downloads/
-
-**/venv/eggs/
-
-**/env/.eggs/
-
-**/.venv/lib/
-
-lib64/
-
-# IDE and Editor Filesparts/
-
-.vscode/sdist/
-
-.idea/var/
-
-.DS_Storewheels/
-
-share/python-wheels/
-
-# Jupyter Notebook Checkpoints*.egg-info/
-
-.ipynb_checkpoints/.installed.cfg
-
-*.egg
-
-# Upload Directory  MANIFEST
-
-static/uploads/*
-
-!static/uploads/.gitkeep# Jupyter Notebook Checkpoints
-.ipynb_checkpoints/
-*.ipynb_checkpoints
 
 # Virtual Environments (CRITICAL - These contain huge files)
 venv/
@@ -114,6 +47,30 @@ venv.bak/
 **/.venv/
 tensorflow_app/venv/
 cloud_deployment/venv/
+
+# Build and Distribution
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # IDE and Editor Files
 .vscode/
@@ -165,19 +122,24 @@ yarn-error.log*
 runs/
 tensorboard_logs/
 
-# Large Output Files
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.pdf
+# Large Output Files (but allow small samples)
 plots/
 visualizations/
+training_history.png
 
-# Ignore uploaded files in Flask app
-cloud_deployment/static/uploads/*
-!cloud_deployment/static/uploads/.gitkeep
+# Upload Directory - keep structure but ignore uploads
+static/uploads/*
+!static/uploads/.gitkeep
 
 # Keep small sample files for testing
 !sample_images/
 !test_images/
+
+# Cloud deployment folder - we'll use root files instead
+cloud_deployment/
+
+# Large model files in models directory
+models/cifar10_tensorflow_model.h5
+models/*.h5
+
+# Keep only essential files for Railway deployment

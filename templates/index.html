@@ -35,10 +35,8 @@
                     <div class="card-body">
                         <!-- Status Information -->
                         <div class="alert alert-info">
-                            <strong>Custom CNN (PyTorch):</strong> {{ custom_cnn_status }}<br>
-                            <strong>MobileNetV2 (TensorFlow):</strong> {{ mobilenet_status }}<br>
+                            <strong>Custom CNN Model:</strong> {{ model_status }}<br>
                             <strong>PyTorch Available:</strong> {{ "✅ Yes" if torch_available else "❌ No" }}<br>
-                            <strong>TensorFlow Available:</strong> {{ "✅ Yes" if tf_available else "❌ No" }}<br>
                             <strong>Supported Classes:</strong> airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck
                         </div>
 
@@ -56,37 +54,11 @@
                         
                         <!-- Upload Form -->
                         <form method="POST" action="/predict" enctype="multipart/form-data" id="uploadForm">
-                            <!-- Model Selection -->
+                            <!-- Model Information -->
                             <div class="mb-4">
-                                <label class="form-label"><strong>🤖 Choose Model(s):</strong></label>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="model" id="customCNN" value="custom_cnn" checked>
-                                            <label class="form-check-label" for="customCNN">
-                                                <strong>Custom CNN</strong><br>
-                                                <small class="text-muted">PyTorch model designed from scratch</small>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="model" id="mobileNet" value="mobilenet">
-                                            <label class="form-check-label" for="mobileNet">
-                                                <strong>MobileNetV2</strong><br>
-                                                <small class="text-muted">Pre-trained transfer learning model</small>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="model" id="bothModels" value="both">
-                                            <label class="form-check-label" for="bothModels">
-                                                <strong>Compare Both</strong><br>
-                                                <small class="text-muted">See predictions from both models</small>
-                                            </label>
-                                        </div>
-                                    </div>
+                                <div class="alert alert-success">
+                                    <strong>🤖 Model:</strong> Custom CNN (PyTorch)<br>
+                                    <small class="text-muted">Lightweight convolutional neural network designed specifically for CIFAR-10 classification</small>
                                 </div>
                             </div>
 
@@ -126,10 +98,9 @@
                         <div class="mt-4">
                             <h5>🔌 API Usage:</h5>
                             <p>You can also use the API endpoint for programmatic access:</p>
-                            <code>POST /api/predict</code> with parameters:
+                            <code>POST /api/predict</code> with parameter:
                             <ul class="mt-2">
                                 <li><code>file</code>: Image file to classify</li>
-                                <li><code>model</code>: Choose 'custom_cnn', 'mobilenet', or 'both' (optional, defaults to 'custom_cnn')</li>
                             </ul>
                         </div>
                     </div>
