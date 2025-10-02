@@ -3,14 +3,12 @@
 # Lightweight deployment with PyTorch Custom CNN only
 # =============================================================================
 
-# Large Model Files (TensorFlow - exclude all)
+# Large Model Files (General - exclude most)
 *.h5
 *.hdf5
 *.pb
 saved_model/
 checkpoints/
-tensorflow_app/
-cifar10_tensorflow_model.h5
 
 # Large Model Files (PyTorch - exclude most, but allow our deployment model)
 *.pt
@@ -45,7 +43,7 @@ venv.bak/
 **/venv/
 **/env/
 **/.venv/
-tensorflow_app/venv/
+
 cloud_deployment/venv/
 
 # Build and Distribution
@@ -143,7 +141,6 @@ static/uploads/*
 cloud_deployment/
 
 # Large model files in models directory
-models/cifar10_tensorflow_model.h5
 models/*.h5
 
 # Keep only essential files for Railway deployment

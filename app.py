@@ -1,6 +1,7 @@
 """
 Lightweight Flask App for CIFAR-10 Classification
-Uses Custom CNN (PyTorch) model only - optimized for Railway deployment
+Supports Custom CNN and ResNet18 (PyTorch) - optimized for Railway deployment
+Reflects the models from Project.ipynb notebook
 """
 
 from flask import Flask, request, render_template, redirect, url_for, flash, jsonify
@@ -122,11 +123,11 @@ def load_model():
                     # It's a checkpoint - determine the model architecture
                     state_dict = checkpoint['model_state_dict']
                     
-                    # Check if it's MobileNetV2 or custom CNN based on keys
-                    if any('features.0.0.weight' in key for key in state_dict.keys()):
-                        # It's MobileNetV2
-                        model = models.mobilenet_v2(pretrained=False)
-                        model.classifier[1] = torch.nn.Linear(model.classifier[1].in_features, 10)
+                    # Check if it's ResNet18 or custom CNN based on keys
+                    if any('fc.weight' in key for key in state_dict.keys()):
+                        # It's ResNet18
+                        model = models.resnet18(pretrained=False)
+                        model.fc = torch.nn.Linear(model.fc.in_features, 10)
                     else:
                         # It's our custom CNN
                         model = CNN()
@@ -142,7 +143,7 @@ def load_model():
                 model.load_state_dict(torch.load(MODEL_PATH, map_location='cpu'))
             
             model.eval()
-            print("✅ Custom CNN model loaded successfully!")
+            print("✅ Model loaded successfully!")
             return model
         else:
             print(f"❌ No model found at {MODEL_PATH}")
@@ -156,20 +157,43 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def preprocess_image(image_file):
+def get_model_type():
+    """Determine if loaded model is ResNet18 or custom CNN"""
+    if model is None:
+        return 'custom'
+    
+    # Check if model has 'fc' layer (ResNet18) or not (Custom CNN)
+    for name, _ in model.named_parameters():
+        if 'fc.weight' in name:
+            return 'resnet'
+    return 'custom'
+
+def preprocess_image(image_file, model_type=None):
     """Preprocess uploaded image for PyTorch model"""
     try:
-        # Define the same transforms as used in training
-        transform = transforms.Compose([
-            transforms.Resize((32, 32)),
-            transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))
-        ])
+        # Auto-detect model type if not provided
+        if model_type is None:
+            model_type = get_model_type()
         
         # Open and convert to RGB
         image = Image.open(image_file).convert('RGB')
-        image_tensor = transform(image).unsqueeze(0)  # Add batch dimension
         
+        if model_type == 'resnet':
+            # ResNet18 preprocessing (ImageNet style, 224x224)
+            transform = transforms.Compose([
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+            ])
+        else:
+            # Custom CNN preprocessing (CIFAR-10 style, 32x32)
+            transform = transforms.Compose([
+                transforms.Resize((32, 32)),
+                transforms.ToTensor(),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))
+            ])
+        
+        image_tensor = transform(image).unsqueeze(0)  # Add batch dimension
         return image_tensor
     except Exception as e:
         raise Exception(f"Error preprocessing image: {str(e)}")
